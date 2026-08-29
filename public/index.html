@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEV@Deakin</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+
+<nav class="text-sky-500">
+  <ul class="flex list-none gap-4 ml-2">
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#signup">Sign Up</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+<br>
+
+<div class="relative group">
+  <img src="cover.png" class="w-screen h-100 object-cover block" alt="Full width cover">
+  <div class="absolute bottom-0 w-full bg-black/50 text-white text-center p-2
+              opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+    Hey, I'm MADHUR JAIN
+  </div>
+</div>
+<br>
+
+<div id="about" class="text-center text-teal-600">
+  <img src="profile.png" class="w-24 h-24 rounded-full mx-auto object-cover" alt="Profile">
+  <p class="text-md font-medium mt-2">
+    I am a student currently pursuing BE Software Engineering at Chitkara University.
+  </p>
+  <hr class="w-1/12 mx-auto border-1 my-4">
+
+  <p id="work" class="text-2xl mt-8">Here's what I've done so far</p>
+
+  <div class="flex items-center gap-4 w-full max-w-xl mx-auto border border-teal-200 rounded-lg p-3 text-left">
+    <img src="bmi-project.png" class="w-64 h-40 object-cover rounded-lg flex-none" alt="BMI Calculator">
+    <div>
+      <p class="font-semibold text-lg">BMI Calculator</p>
+      <p class="text-teal-600">It takes the weight input and shows the category.</p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-4 w-full max-w-xl mx-auto border border-teal-200 rounded-lg p-3 text-left mt-4">
+    <img src="grade-project.png" class="w-64 h-40 object-cover rounded-lg flex-none" alt="Grade Checker">
+    <div>
+      <p class="font-semibold text-lg">Grade Checker</p>
+      <p class="text-teal-600">It tells the grade obtained by the marks.</p>
+      <a href="https://github.com/nj5307198-pixel/gradechecker/blob/main/Exercise1.html"
+         class="text-sky-500 underline" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <hr class="w-1/12 mx-auto border-1 my-4">
+
+  <!-- Sign-up feature required by P2 -->
+  <div id="signup" class="mt-8 mb-10">
+    <p class="text-2xl mb-4">Sign Up For Our Daily Insider</p>
+    <form id="signup-form" class="flex justify-center gap-2 flex-wrap">
+      <input
+        type="email"
+        id="email-input"
+        name="email"
+        placeholder="Enter your email"
+        required
+        class="border border-teal-300 rounded px-3 py-2 w-64"
+      >
+      <button
+        type="submit"
+        class="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+      >
+        Subscribe
+      </button>
+    </form>
+    <p id="signup-message" class="mt-3 text-sm font-medium"></p>
+  </div>
+
+  <p class="text-2xl mt-8 text-center">My photos</p>
+  <div class="flex flex-wrap justify-center gap-2 mt-4 mb-10">
+    <img src="photo1.png" class="w-64 h-40 object-cover rounded-lg" alt="Photo 1">
+    <img src="photo2.png" class="w-64 h-40 object-cover rounded-lg" alt="Photo 2">
+    <img src="photo3.png" class="w-64 h-40 object-cover rounded-lg" alt="Photo 3">
+    <img src="photo4.png" class="w-64 h-40 object-cover rounded-lg" alt="Photo 4">
+  </div>
+</div>
+
+<script>
+  // Frontend -> ExpressJS backend, using fetch() as allowed by the task sheet
+  const BACKEND_URL = "http://localhost:3000/subscribe";
+
+  document.getElementById("signup-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const emailInput = document.getElementById("email-input");
+    const messageEl = document.getElementById("signup-message");
+    const email = emailInput.value.trim();
+
+    messageEl.textContent = "Sending...";
+    messageEl.className = "mt-3 text-sm font-medium text-gray-500";
+
+    try {
+      const response = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await response.json();
+
+      if (response.status === 202 || response.status === 200) {
+        messageEl.textContent = data.message || "Subscribed! Check your inbox.";
+        messageEl.className = "mt-3 text-sm font-medium text-green-600";
+        emailInput.value = "";
+      } else {
+        messageEl.textContent = data.message || "Something went wrong.";
+        messageEl.className = "mt-3 text-sm font-medium text-red-600";
+      }
+    } catch (err) {
+      messageEl.textContent = "Could not reach the server. Is it running?";
+      messageEl.className = "mt-3 text-sm font-medium text-red-600";
+    }
+  });
+</script>
+
+</body>
+</html>
